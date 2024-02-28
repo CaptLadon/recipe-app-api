@@ -11,7 +11,7 @@ ENV PYTHONUNBUFFERED 1
 # Install dependencies
 # copies the requirements.txt file to the /tmp/requirements.txt
 COPY ./requirements.txt /tmp/requirements.txt
-COPY ./requirements.dev.txt /tmp/requirements-dev.txt
+COPY ./requirements.dev.txt /tmp/requirements.dev.txt
 # copy app  directory 
 COPY ./app /app
 WORKDIR /app
