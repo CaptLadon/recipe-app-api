@@ -6,7 +6,7 @@ LABEL maintainer="ladonbv"
 
 ENV PYTHONUNBUFFERED 1
 # This is a recommended best practice for Python Dockerfiles.
-# This avoids writing .pyc files to disk, which can cause problems in some
+# This avoids writing .pyc files to ådisk, which can cause problems in some
 
 # Install dependencies
 # copies the requirements.txt file to the /tmp/requirements.txt
@@ -24,6 +24,11 @@ ARG DEV=flase
 RUN python -m venv /py && \
     # upgrade pip
     /py/bin/pip install --upgrade pip && \
+    # postgres client
+    apk add --update --no-cache postgresql-client && \
+    # install the build dependencies
+    apk add --update --no-cache --virtual .tmp-build-deps \
+    build-base postgresql-dev musl-dev && \
     # install the dependencies from the requirements.txt file
     /py/bin/pip install -r /tmp/requirements.txt && \
     if [ $DEV = "true" ]; \
@@ -31,6 +36,8 @@ RUN python -m venv /py && \
     fi && \
     # remove the /tmp directory
     rm -rf /tmp && \
+    # delete additional pg dependencies
+    apk del .tmp-build-deps && \
     # create a new user called django-user
     # best practice not to use the root user in the container
     adduser \
